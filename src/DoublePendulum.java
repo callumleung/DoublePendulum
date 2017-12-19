@@ -2,9 +2,26 @@
 
 public class DoublePendulum {
 
-    Particle3D p1;
-    Particle3D p2;
+    /**
+     * Create the two pendulums of the system.
+     */
+    private Particle3D p1;
+    private Particle3D p2;
+    /**
+     * Fields for params that appear in the equation of motion but only need to be calculated once.
+     */
 
+    private double alpha, OnePlusAlpha, OnePlusAlphaGamma, AlphaBeta, Gamma, OneOverBeta;
+
+    /**
+     * Dimensionality of the system.
+     */
+    private static final int Dim = 4;
+
+    /**
+     * a value used in calculating the potential energy of the system.
+     */
+    public static final double GRAVITY = 9.8;
 
     /** Here we initialise the initial conditions of the system.
      * We simulate the double pendulum only in the plane so the z coordinates can be ignored.
@@ -21,7 +38,13 @@ public class DoublePendulum {
 
     }
 
-    public void iterate(int n, double h){
+    /**
+     * a method to advance the state of the system by performing repeated integrations according to the Runge-Kutta algorithm.
+     * @param n the number of integrations to perform.
+     * @param t the timestep to be used.
+     */
+
+    public void iterate(int n, double t){
 
         //TODO: Write Runge-Kutta algorithim
 
