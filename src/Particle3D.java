@@ -151,15 +151,20 @@ public class Particle3D {
        }
 
     public void leapPosition(double dt){
-    	position =Vector3D.addVector3D( position, Vector3D.multVector3D(velocity,dt));
+    	position = Vector3D.addVector3D( position, Vector3D.multVector3D(velocity,dt));
      }
      
     /** a method to evaluate the relative separation 
      *i.e. r(t+dt)-r(t)
      */
     public static Vector3D relativePosition(Particle3D A, Particle3D B){
-	return Vector3D.subVector3D(A.getPosition(), B.getPosition());
+	return Vector3D.subVector3D(B.getPosition(), A.getPosition());
 	    }
+
+    public static Vector3D relativeVelocity(Particle3D A, Particle3D B){
+
+        return Vector3D.subVector3D(B.getVelocity(), A.getVelocity());
+    }
     
 
 
