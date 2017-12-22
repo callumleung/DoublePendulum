@@ -22,7 +22,7 @@ public class DoublePendulum {
     /**
      * a value used in calculating the potential energy of the system.
      */
-    public static final double GRAVITY = 9.8;
+    public static final double GRAVITY = 10.0;
 
     private double time = 0.0;
 
@@ -52,7 +52,7 @@ public class DoublePendulum {
      * Two arrays for holding the previous and intermediate points in the solver.
      */
 
-    private double[] midpt =  new double[Dim];
+    private double[] midpt = new double[Dim];
     private double[] prev = new double[Dim];
 
 
@@ -82,7 +82,6 @@ public class DoublePendulum {
         //compute the squares of the lengths initially
         length1 = p1.getPosition().getX() * p1.getPosition().getX() + p1.getPosition().getY() * p1.getPosition().getY();
         length2 = p12.getX() * p12.getX() + p12.getY() * p12.getY();
-
         //convert the angles
         state[0] = Math.atan2(p1.getPosition().getX(), -p1.getPosition().getY());
         state[1] = Math.atan2(p12.getX(), -p12.getY());
@@ -96,13 +95,13 @@ public class DoublePendulum {
         length2 = Math.sqrt(length2);
 
         //compute the parameters that are used in the equation of motions
-        alpha = mass1/mass2;
-        double beta = length1/length2;
+        alpha = mass2/mass1;
+        double beta = length2/length1;
         Gamma = GRAVITY/length1;
         OnePlusAlpha = 1.0 + alpha;
         OnePlusAlphaGamma = OnePlusAlpha * Gamma;
         AlphaBeta = alpha * beta;
-        OneOverBeta = 1/beta;
+        OneOverBeta = 1.0/beta;
 
     }
 
@@ -120,13 +119,12 @@ public class DoublePendulum {
 
         //TODO: Write Runge-Kutta algorithim
         //params that used in the equations but are consts and only need to  be calulated once.
-        final double HALF = 0.5*h, THIRD = h/3, SIXTH = h/6;
+        final double HALF = 0.5*h, THIRD = h/3.0, SIXTH = h/6.0;
 
         for (int step =  0; step < n; step++){
 
-            for (int i = 0; i < Dim; i++){
-                midpt[i] = prev [i] = state[i];
-            }
+            for (int i = 0; i < Dim; i++) midpt[i] = prev [i] = state[i];
+
 
             //fill dydt with the A vector
             evaluateDyDt(time, midpt);
@@ -175,7 +173,8 @@ public class DoublePendulum {
      * @return
      */
 
-    public Particle3D getPendulum1() {
+    public Particle3D getPendulum1()
+    {
 
         return new Particle3D(mass1,
                 new Vector3D(length1*Math.sin(state[0]), -length1*Math.cos(state[0]), 0.0), //position
@@ -196,8 +195,8 @@ public class DoublePendulum {
                 new Vector3D( length1*Math.sin(state[0]) + length2*Math.sin(state[1]),
                         -length1*Math.cos(state[0]) - length2*Math.cos(state[1]),
                         0.0),//position
-                new Vector3D( length1*state[2]*Math.sin(state[0]) + length2*state[3]*Math.cos(state[1]),
-                        length1*state[2]*Math.sin(state[0] + length2*state[3]*Math.sin(state[1])),
+                new Vector3D( length1*state[2]*Math.cos(state[0]) + length2*state[3]*Math.cos(state[1]),
+                        length1*state[2]*Math.sin(state[0]) + length2*state[3]*Math.sin(state[1]),
                         0.0), //velocity
                 null);
 

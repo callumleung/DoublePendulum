@@ -48,7 +48,7 @@ public class Particle3D {
      */
     public void setVelocity(Vector3D v) {this.velocity=v;}
     /**Set the mass of the particle 
-     *@param m is a double representing the mass of the particle 
+     *@param m is a double representing the mass of the particle
      */
     public void setMass (double m) {this.mass=m;}
     /**Set the name of the particle 
@@ -118,7 +118,7 @@ public class Particle3D {
     /**Find the kinetic energy of Particle3D (1/2m*v^2)
      *@return a double that gives the value of the kinetic energy
      */
-    public double kineticEnergy() { return 0.5 * mass * velocity.magSquared();}
+    public double kineticEnergy() { return 0.5 * mass * Vector3D.dotVector3D(velocity, velocity);}
     /**Time integration: evolve the velocity according to 
      *dv=f/m*dt
      *@param dt is the infinitesimal time step
@@ -158,7 +158,7 @@ public class Particle3D {
      *i.e. r(t+dt)-r(t)
      */
     public static Vector3D relativePosition(Particle3D A, Particle3D B){
-	return Vector3D.subVector3D(B.getPosition(), A.getPosition());
+	    return Vector3D.subVector3D(B.getPosition(), A.getPosition());
 	    }
 
     public static Vector3D relativeVelocity(Particle3D A, Particle3D B){
