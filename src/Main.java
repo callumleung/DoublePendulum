@@ -9,10 +9,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        //default values
-        double p1y = -0.2;
-        double p2y = -0.4;
-        double p2vx = 4.0;
+
+        double p1y;
+        double p2y;
+        double p2vx;
 
         try {
             p1y = Double.valueOf(args[0]);
@@ -21,6 +21,9 @@ public class Main {
         } catch (Exception ignore) {
             //ignore any exception and proceed with default values
             System.out.println("Invalid command line arguments; Proceeding with default values.");
+            p1y = -0.2;
+            p2y = -0.4;
+            p2vx = 4.0;
         }
 
 
