@@ -119,53 +119,57 @@ public class DoublePendulum {
 
     public void iterate(int n, double h){
 
-        //TODO: Write Runge-Kutta algorithim
         //params that used in the equations but are consts and only need to  be calulated once.
         final double HALF = 0.5*h, THIRD = h/3.0, SIXTH = h/6.0;
 
-        for (int step =  0; step < n; step++){
+        for (int step =  0; step < n; step++) {
 
-            for (int i = 0; i < Dim; i++) midpt[i] = prev [i] = state[i];
+            synchronized (this) {
+
+                for (int i = 0; i < Dim; i++) midpt[i] = prev[i] = state[i];
 
 
-            //fill dydt with the A vector
-            evaluateDyDt(time, midpt);
+                //fill dydt with the A vector
+                evaluateDyDt(time, midpt);
 
-            //add 1/6 A to the state and load midpt with the intermediate time point y+a/2
-            for (int i = 0; i < Dim; i++){
-                state[i] += SIXTH * dydt[i];
-                midpt[i] = prev[i] + HALF * dydt[i];
+                //add 1/6 A to the state and load midpt with the intermediate time point y+a/2
+                int k = 0;
+                for (double j : state) {
+                    j += SIXTH * dydt[k];
+                    midpt[k] = prev[k] + HALF * dydt[k];
+                    k++;
+                }
+
+                //fill dydt with the b vector
+                evaluateDyDt(time + HALF, midpt);
+                // add 1/3 B to the state, load midpoint with the intermediate time point y + b/2
+                for (int i = 0; i < Dim; i++) {
+                    state[i] += THIRD * dydt[i];
+                    midpt[i] = prev[i] + HALF * dydt[i];
+
+                }
+
+                //fill dydt with the c vector
+                evaluateDyDt(time + HALF, midpt);
+                //Add 1/3 c to the state and load a midpoint with the final point y+c
+                for (int i = 0; i < Dim; i++) {
+                    state[i] += THIRD * dydt[i];
+                    midpt[i] = prev[i] + h * dydt[i];
+                }
+
+                //fill dy/dt with the d vector
+                evaluateDyDt(time, midpt);
+
+                //add 1/6 d to the state
+
+                for (int i = 0; i < Dim; i++) {
+                    state[i] += SIXTH * dydt[i];
+                }
+
+                //increment the time
+                time += h;
+
             }
-
-            //fill dydt with the b vector
-            evaluateDyDt(time + HALF, midpt);
-            // add 1/3 B to the state, load midpoint with the intermediate time point y + b/2
-            for (int i = 0; i < Dim; i++){
-                state[i] += THIRD * dydt[i];
-                midpt[i] = prev[i] + HALF * dydt[i];
-
-            }
-
-            //fill dydt with the c vector
-            evaluateDyDt(time + HALF, midpt);
-            //Add 1/3 c to the state and load a midpoint with the final point y+c
-            for (int i = 0;  i < Dim; i++){
-                state[i] += THIRD * dydt[i];
-                midpt[i] =  prev[i] + h * dydt[i];
-            }
-
-            //fill dy/dt with the d vector
-            evaluateDyDt(time, midpt);
-
-            //add 1/6 d to the state
-
-            for (int i = 0; i < Dim; i++){
-                state[i] += SIXTH * dydt[i];
-            }
-
-            //increment the time
-            time += h;
-
         }
     }
 

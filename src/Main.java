@@ -22,7 +22,7 @@ public class Main {
             //ignore any exception and proceed with default values
             System.out.println("Invalid command line arguments; Proceeding with default values.");
         }
-        //TODO: main program goes here
+
 
         //create the double pendulum object
         DoublePendulum dp = new DoublePendulum(
@@ -50,9 +50,20 @@ public class Main {
         frame.setVisible(true);
 
         for (;;){
-            dp.iterate((int) 1e5, 1e-7);
+            dp.iterate((int) 1e4, 1.5e-7);
             //update visualisation
             dpView.repaint();
+            //synchronising repaint requests and responses
+            //pause the simulation until the current system is drawn to the canvas
+            synchronized (dp){
+                try {
+                    dp.wait();
+                } catch (Exception ignore){
+                }
+
+
+
+            }
         }
 
 

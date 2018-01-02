@@ -69,10 +69,13 @@ public class DPViewer extends JComponent {
         double Sy = (double) -height/(2*dp.getMaxLength());
         double Sx = -Sy;
 
-        //get the real worl positions
-        Vector3D p1pos = dp.getPendulum1().getPosition();
-        Vector3D p2pos = dp.getPendulum2().getPosition();
-
+        //get the real world positions and notify waiting threads that the positions have been obtained.
+        Vector3D p1pos, p2pos;
+        synchronized (dp) {
+            p1pos = dp.getPendulum1().getPosition();
+            p2pos = dp.getPendulum2().getPosition();
+            dp.notifyAll();
+        }
         //draw the string connecting the first mass to the origin, and then to the second mass
         g.setColor(Color.BLUE);
         g.drawLine((int) Ox, (int) Oy,(int) (Ox + Sx*p1pos.getX()), (int) (Oy + Sy*p1pos.getY()));
