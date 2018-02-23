@@ -102,6 +102,7 @@ public class DPViewer extends JComponent {
         dp = dpview;
         setOpaque(true);
         setBackground(Color.white);
+        //test
 
     }
 
